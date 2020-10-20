@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-type=text/html;charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> 课程评价平台- 课程列表</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="css/plugins/footable/footable.core.css" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css?v=4.1.0" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h3>课程列表</h3>
+
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">选项 01</a>
+                                </li>
+                                <li><a href="#">选项 02</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <input type="text" class="form-control input-sm m-b-xs" id="filter"
+                                   placeholder="搜索课程...">
+
+                            <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                                <tr>
+                                    <th>课程编号</th>
+                                    <th>课程名称</th>
+                                    <th>授课老师</th>
+                                    <th>开课学院</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <!--在这里显示数据库中读取到的课程信息-->
+                            <tbody id="cinfo"></tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="5">
+                                        <ul class="pagination pull-right"></ul>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="js/jquery.min.js?v=2.1.4"></script>
+    <script src="js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="js/plugins/footable/footable.all.min.js"></script>
+
+
+    <!-- 自定义js -->
+    <script type="text/javascript" charset="utf-8">
+        $.ajax({
+            type: 'POST',
+            url: 'courselist.php',
+            data: {
+            },
+            success: function (data) {
+                //console.log(data);
+                var a = data.split(' ');
+                var trStr = '';//动态拼接table
+                for (var i = 0; i < a.length - 1; i++) {
+                    trStr += '<tr>';
+                    trStr += '<td>' + JSON.parse(a[i]).cid + '</td>';
+                    trStr += '<td>' + JSON.parse(a[i]).cname + '</td>';
+                    trStr += '<td>' + JSON.parse(a[i]).tname + '</td>';
+                    trStr += '<td>' + JSON.parse(a[i]).department + '</td>';
+                    trStr += '<td><a href="courseinfo.html?cid='+ JSON.parse(a[i]).cid +'"><i class="fa fa-check text-navy"></i> 查看详情</a></td>';
+                    trStr += '</tr>';
+                }
+                $("#cinfo").html(trStr);
+            }
+        });
+    </script>
+    <!-- 自定义js -->
+    <script src="js/content.js?v=1.0.0"></script>
+    <script>
+        $(document).ready(function () {
+            $('.footable').footable();
+            $('.footable2').footable();
+        });
+    </script>
+</body>
+</html>

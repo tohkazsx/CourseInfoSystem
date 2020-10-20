@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - 个人资料</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="favicon.ico"> <link href="css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css?v=4.1.0" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>个人资料</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="notifications.html#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="alert alert-success">
+                    用户名 <a id="username"></a>
+                </div>
+                <div class="alert alert-info">
+                    真实姓名 <a id="realname"></a>
+                </div>
+                <div class="alert alert-warning">
+                    所属院系 <a id="department"></a>
+                </div>
+                <div class="alert alert-danger">
+                    联系电话 <a id="telephone"></a>
+                </div>
+                <div class="alert alert-danger">
+                    联系邮箱 <a id="email"></a>
+                </div>
+                <div class="alert alert-danger">
+                    简介 <a id="intro"></a>
+                </div>
+            </div>
+            <div class="user-button">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <button type="button" class="btn btn-primary btn-sm btn-block" onclick="window.location.href='profalter.html'"><i class="fa fa-envelope"></i> 完善个人信息</button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="button" class="btn btn-default btn-sm btn-block" onclick="window.location.href='myCom.html'"><i class="fa fa-coffee"></i> 查看我的评论</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="js/jquery.min.js?v=2.1.4"></script>
+    <script src="js/bootstrap.min.js?v=3.3.6"></script>
+
+
+
+    <!-- 自定义js -->
+    <script type="text/javascript" charset="utf-8">
+    $.ajax({
+            type: 'POST',
+            url: 'userInfo.php',
+            data: {
+            },
+            success: function (data) {
+                //alert(data);
+                var a = data.split(' ');
+                var userInfo = new Array();
+                for (var i = 0; i < a.length - 1; i++) {
+                    userInfo[0]=JSON.parse(a[i]).username;
+                    userInfo[1]=JSON.parse(a[i]).realname;
+                    userInfo[2]=JSON.parse(a[i]).department;
+                }
+                $("#department").html(userInfo[2]);
+                $("#realname").html(userInfo[1]);
+                $("#username").html(userInfo[0]);
+            }
+        });
+    $.ajax({
+            type: 'POST',
+            url: 'userDetail.php',
+            data: {
+            },
+            success: function (data) {   
+                var b = data.split(' ');
+                var userDetail = new Array();
+                for (var i = 0; i < b.length - 1; i++) {
+                userDetail[0]=JSON.parse(b[i]).telephone;
+                userDetail[1]=JSON.parse(b[i]).email;
+                userDetail[2]=JSON.parse(b[i]).intro;
+                }
+                $("#intro").html(userDetail[2]);
+                $("#email").html(userDetail[1]);
+                $("#telephone").html(userDetail[0]);
+            }
+        });
+    </script>
+
+    <!-- Peity -->
+    <script src="js/plugins/peity/jquery.peity.min.js"></script>
+
+    <!-- Peity -->
+    <script src="js/demo/peity-demo.js"></script>
+
+    
+    
+
+</body>
+
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<!--调用了courseInfo.php courseComPin.php-->
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="css/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css?v=4.1.0" rel="stylesheet">
+    <title>课程详情</title>
+</head>
+
+<body class="gray-bg">
+    
+    <div class="wrapper wrapper-content">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>课程详情</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="notifications.html#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="alert alert-success">
+                    课程号 <a id="cid"></a>
+                </div>
+                <div class="alert alert-info">
+                    课程名称 <a id="cname"></a>
+                </div>
+                <div class="alert alert-warning">
+                    任课老师 <a id="tname"></a>
+                </div>
+                <div class="alert alert-danger">
+                    开课学院 <a id="department"></a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-14">
+                    <div class="wrapper wrapper-content animated fadeInUp">
+                        <ul class="notes" id="ComPin">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var url = location.search.slice(1); // 从location对象中的search属性得到地址栏里 ? 后面的参数       【接参】
+        document.querySelector('span').innerText = url; // 输出到span标签上看看
+    </script>
+
+    <!-- 全局js -->
+    <script src="js/jquery.min.js?v=2.1.4"></script>
+    <script src="js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="js/plugins/footable/footable.all.min.js"></script>
+
+
+    <!-- 自定义js -->
+    <script type="text/javascript" charset="utf-8">
+
+        var getParam = function (name) {
+            var search = document.location.search;
+            var pattern = new RegExp("[?&]" + name + "\=([^&]+)", "g");
+            var matcher = pattern.exec(search);
+            var items = null;
+            if (null != matcher) {
+                try {
+                    items = decodeURIComponent(decodeURIComponent(matcher[1]));
+                } catch (e) {
+                    try {
+                        items = decodeURIComponent(matcher[1]);
+                    } catch (e) {
+                        items = matcher[1];
+                    }
+                }
+            }
+            return items;
+        };
+        var cid = getParam('cid');
+        $("#cid").html(cid);
+        //alert(cid);
+        $.ajax({
+            type: 'POST',
+            url: 'courseComPin.php',
+            data: { "cid": cid },
+            success: function (data) {
+                //console.log(data);
+                var a = data.split(' ');
+                //alert(a);
+                var trStr = '';//动态拼接table
+                var liStr = '';
+                for (var i = 0; i < a.length - 1; i++) {
+                    liStr+='<li>';
+                    liStr+='<div>';
+                    liStr+='<small>'+ JSON.parse(a[i]).ctime +'-来自'+JSON.parse(a[i]).uid +'号用户</small>';
+                    liStr+='<h4>'+JSON.parse(a[i]).title+'</h4>';
+                    liStr+='<p>'+JSON.parse(a[i]).content+'</p>';
+                    liStr+='<a href="pin_board.html#"><i class="fa fa-trash-o "></i></a>';
+                    liStr+='</div>';
+                    liStr+='</li>';
+                }
+                $("#courseCom").html(trStr);
+                $("#ComPin").html(liStr);
+            }
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: 'courseInfo.php',
+            data: { "cid": cid },
+            success: function (data) {
+                //alert(data);
+                var b = data.split(' ');
+                var courseInfo = new Array();
+                for (var i = 0; i < b.length - 1; i++) {
+                    courseInfo[0]=JSON.parse(b[i]).cname;
+                    courseInfo[1]=JSON.parse(b[i]).tname;
+                    courseInfo[2]=JSON.parse(b[i]).department;
+                }
+                //alert(courseInfo);
+                $("#department").html(courseInfo[2]);
+                $("#tname").html(courseInfo[1]);
+                $("#cname").html(courseInfo[0]);
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>

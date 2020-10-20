@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="css/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css?v=4.1.0" rel="stylesheet">
+    <title>评价详情</title>
+</head>
+
+<body class="gray-bg">
+    
+    <div class="wrapper wrapper-content">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h3>评价详情</h3>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="notifications.html#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="alert alert-success">
+                    课程编号 <a id="cid"></a>
+                </div>
+                <div class="alert alert-info">
+                    课程名称 <a id="cname"></a>
+                </div>
+                <div class="alert alert-warning">
+                    任课老师 <a id="tname"></a>
+                </div>
+                <div class="alert alert-danger">
+                    开课学院 <a id="department"></a>
+                </div>
+                <div class="alert alert-danger">
+                  <h3><b id="title"></b></h3> <h5 id="ctime"></h5><h5 id="username"></h5>
+                    <br>
+                    <h4><b>评价内容</b></h4><p id="content"></p>
+                </div>
+ 
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="js/jquery.min.js?v=2.1.4"></script>
+    <script src="js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="js/plugins/footable/footable.all.min.js"></script>
+
+
+    <!-- 自定义js -->
+    <!--取得URL中带来的参数-->
+    <script type="text/javascript" charset="utf-8">
+
+        var getParam = function (name) {
+            var search = document.location.search;
+            var pattern = new RegExp("[?&]" + name + "\=([^&]+)", "g");
+            var matcher = pattern.exec(search);
+            var items = null;
+            if (null != matcher) {
+                try {
+                    items = decodeURIComponent(decodeURIComponent(matcher[1]));
+                } catch (e) {
+                    try {
+                        items = decodeURIComponent(matcher[1]);
+                    } catch (e) {
+                        items = matcher[1];
+                    }
+                }
+            }
+            return items;
+        };
+        var comment_no = getParam('comment_no');
+        //alert(cid);
+        $.ajax({
+            type: 'POST',
+            url: 'comdetail.php',
+            data: { "comment_no": comment_no },
+            success: function (data) {
+                //console.log(data);
+                var a = data.split(' ');
+                //alert(a);
+                var comInfo = new Array();
+                for (var i = 0; i < a.length - 1; i++) {
+                    comInfo[0]=JSON.parse(a[i]).cname;
+                    comInfo[1]=JSON.parse(a[i]).tname;
+                    comInfo[2]=JSON.parse(a[i]).department;
+                    comInfo[3]=JSON.parse(a[i]).cid;
+                    comInfo[4]=JSON.parse(a[i]).username;
+                    comInfo[5]=JSON.parse(a[i]).title;
+                    comInfo[6]=JSON.parse(a[i]).content;
+                    comInfo[7]=JSON.parse(a[i]).ctime;
+                }
+                //alert(comInfo);
+                $("#department").html(comInfo[2]);
+                $("#tname").html(comInfo[1]);
+                $("#cname").html(comInfo[0]);
+                $("#username").html(comInfo[4]);
+                $("#cid").html(comInfo[3]);
+                $("#title").html(comInfo[5]);
+                $("#content").html(comInfo[6]);
+                $("#ctime").html(comInfo[7]);
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>
